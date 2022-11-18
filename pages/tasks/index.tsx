@@ -1,5 +1,5 @@
 import { Input } from "app/core/components/Input"
-import { Task } from "app/core/components/Task"
+import { Task } from "app/tasks/components/Task"
 import Layout from "app/core/layouts/Layout"
 import { BlitzPage } from "@blitzjs/next"
 import { useState } from "react"
@@ -7,6 +7,7 @@ import createTask from "app/tasks/mutations/createTask"
 import { invalidateQuery, useMutation, useQuery } from "@blitzjs/rpc"
 import getTasks from "app/tasks/queries/getTasks"
 import updateTask from "app/tasks/mutations/updateTask"
+import deleteTask from "app/tasks/mutations/deleteTask"
 
 const Tasks: BlitzPage = () => {
   const [newTaskLabel, setNewTaskLabel] = useState("")
@@ -25,9 +26,23 @@ const Tasks: BlitzPage = () => {
     },
   })
 
+  const [deleteTaskMutation] = useMutation(deleteTask, {
+    onSuccess: async () => {
+      await invalidateQuery(getTasks)
+    },
+  })
+
   const handleCheck = async (id: number, checked: boolean) => {
     try {
       await checkTaskMutation({ id, checked })
+    } catch (error) {
+      alert("Error updating choice " + JSON.stringify(error, null, 2))
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteTaskMutation({ id })
     } catch (error) {
       alert("Error updating choice " + JSON.stringify(error, null, 2))
     }
@@ -44,10 +59,12 @@ const Tasks: BlitzPage = () => {
       {tasks.map((task) => (
         <Task
           key={task.id}
-          task={{ label: task.label, checked: task.checked }}
+          task={{ label: task.label, checked: task.checked, id: task.id }}
           onClick={async () => {
             await handleCheck(task.id, task.checked)
-            console.log(`TODO: Toggle the task's checked state`)
+          }}
+          onDelete={async () => {
+            await handleDelete(task.id)
           }}
         />
       ))}

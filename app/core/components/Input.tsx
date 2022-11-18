@@ -1,6 +1,6 @@
 import classNames from "classnames"
 import React from "react"
-import { containerStyle } from "./Task"
+import { containerStyle } from "../../tasks/components/Task"
 
 type InputProps = {
   value: string

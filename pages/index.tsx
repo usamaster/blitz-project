@@ -21,7 +21,7 @@ const UserInfo = () => {
     return (
       <>
         <button
-          className="button small"
+          className="button"
           onClick={async () => {
             await logoutMutation()
           }}
@@ -39,12 +39,12 @@ const UserInfo = () => {
     return (
       <>
         <Link href={Routes.SignupPage()}>
-          <a className="button small">
+          <a className="button ">
             <strong>Sign Up</strong>
           </a>
         </Link>
         <Link href={Routes.LoginPage()}>
-          <a className="button small">
+          <a className="button ">
             <strong>Login</strong>
           </a>
         </Link>
@@ -69,7 +69,7 @@ const Home: BlitzPage = () => {
 
           <div className="buttons" style={{ marginTop: "5rem" }}>
             <a
-              className="button"
+              className="button-outline"
               href="https://blitzjs.com/docs/getting-started?utm_source=blitz-new&utm_medium=app-template&utm_campaign=blitz-new"
               target="_blank"
               rel="noopener noreferrer"

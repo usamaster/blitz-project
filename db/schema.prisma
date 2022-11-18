@@ -71,3 +71,26 @@ model Task {
   label     String
   checked   Boolean  @default(false)
 }
+
+model Elevator {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  currentFloor Int
+  destinations Int[]
+  route        Int[]
+  isMoving     Boolean
+  upCalls      Int[]
+  downCalls    Int[]
+  floors       Floor[]
+}
+
+model Floor {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  level      Int
+  active     Boolean
+  elevator   Elevator @relation(fields: [elevatorId], references: [id])
+  elevatorId Int
+}

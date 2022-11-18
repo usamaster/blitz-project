@@ -46,8 +46,37 @@ CREATE TABLE "Task" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "label" TEXT NOT NULL,
+    "checked" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Elevator" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "currentFloor" INTEGER NOT NULL,
+    "destinations" INTEGER[],
+    "route" INTEGER[],
+    "isMoving" BOOLEAN NOT NULL,
+    "upCalls" INTEGER[],
+    "downCalls" INTEGER[],
+
+    CONSTRAINT "Elevator_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Floor" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "level" INTEGER NOT NULL,
+    "active" BOOLEAN NOT NULL,
+    "elevatorId" INTEGER NOT NULL,
+
+    CONSTRAINT "Floor_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -64,3 +93,6 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Floor" ADD CONSTRAINT "Floor_elevatorId_fkey" FOREIGN KEY ("elevatorId") REFERENCES "Elevator"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

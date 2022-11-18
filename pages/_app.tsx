@@ -3,6 +3,7 @@ import { AuthenticationError, AuthorizationError } from "blitz"
 import React from "react"
 import { withBlitz } from "app/blitz-client"
 import "./style.css"
+import "./elevator.css"
 
 import "app/core/styles/index.css"
 
