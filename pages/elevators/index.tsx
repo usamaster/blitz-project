@@ -1,15 +1,9 @@
 import { Suspense, useEffect } from "react"
-import { Routes } from "@blitzjs/next"
 import Head from "next/head"
-import Link from "next/link"
 import { useQuery, useMutation, invalidateQuery } from "@blitzjs/rpc"
-import { useRouter } from "next/router"
 import Layout from "app/core/layouts/Layout"
 import Floor from "app/elevators/components/Floor"
 import getElevator from "app/elevators/queries/getElevator"
-import updateElevator from "app/elevators/mutations/updateElevator"
-import calculateRoute from "app/elevators/mutations/calculateRoute"
-import axios from "axios"
 import elevatorUp from "app/elevators/mutations/elevatorUp"
 import elevatorUp2 from "app/elevators/mutations/elevatorUp2"
 import currentFloorIncrement from "app/elevators/mutations/currentFloorIncrement"
@@ -17,8 +11,9 @@ import elevatorDown2 from "app/elevators/mutations/elevatorDown2"
 import currentFloorDecrement from "app/elevators/mutations/currentFloorDecrement"
 import emptyDestinations from "app/elevators/mutations/emptyDestinations"
 import resetElevator from "app/elevators/mutations/resetElevator"
+import { BlitzPage } from "@blitzjs/auth"
 
-const ElevatorsPage = () => {
+const ElevatorsPage: BlitzPage = () => {
   const [elevator] = useQuery(getElevator, { id: 1 })
 
   const [clearRoute] = useMutation(emptyDestinations, {
@@ -78,6 +73,10 @@ const ElevatorsPage = () => {
     }
   }, [elevator])
 
+  const Spinner = () => {
+    return <>loading..</>
+  }
+
   return (
     <Layout>
       <Head>
@@ -107,21 +106,26 @@ const ElevatorsPage = () => {
       </button>
 
       <div>
-        <div className="elevator">
-          {elevator.floors.map((floor: any) => {
-            return (
-              <Floor
-                key={floor.level}
-                level={floor.level}
-                active={floor.active}
-                elevator={elevator}
-              />
-            )
-          })}
-        </div>
+        <Suspense fallback="Loading...">
+          <div className="elevator">
+            {elevator &&
+              elevator.floors.map((floor: any) => {
+                return (
+                  <Floor
+                    key={floor.level}
+                    level={floor.level}
+                    active={floor.active}
+                    elevator={elevator}
+                  />
+                )
+              })}
+          </div>
+        </Suspense>
       </div>
     </Layout>
   )
 }
+
+ElevatorsPage.getLayout = (page) => <Layout title="Taskmaster">{page}</Layout>
 
 export default ElevatorsPage
