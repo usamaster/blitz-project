@@ -12,6 +12,7 @@ import currentFloorDecrement from "app/elevators/mutations/currentFloorDecrement
 import emptyDestinations from "app/elevators/mutations/emptyDestinations"
 import resetElevator from "app/elevators/mutations/resetElevator"
 import { BlitzPage } from "@blitzjs/auth"
+import arrived from "app/elevators/mutations/arrived"
 
 const ElevatorsPage: BlitzPage = () => {
   const [elevator] = useQuery(getElevator, { id: 1 })
@@ -29,6 +30,11 @@ const ElevatorsPage: BlitzPage = () => {
   const [deactivateFloor] = useMutation(elevatorUp)
   const [activateFloorAbove] = useMutation(elevatorUp2)
   const [incrementFloor] = useMutation(currentFloorIncrement, {
+    onSuccess: async () => {
+      await invalidateQuery(getElevator)
+    },
+  })
+  const [arrivedAtDestination] = useMutation(arrived, {
     onSuccess: async () => {
       await invalidateQuery(getElevator)
     },
@@ -65,11 +71,25 @@ const ElevatorsPage: BlitzPage = () => {
     } catch (error) {}
   }
 
+  const arrivedDest = async (id: number, currentFloor: number, destinations: Array<number>) => {
+    try {
+      await arrivedAtDestination({ id, currentFloor, destinations })
+    } catch (error) {}
+  }
+
   useEffect(() => {
     if (elevator.destinations[0] && elevator.destinations[0] > elevator.currentFloor) {
       moveElevatorUp(elevator.currentFloor + 1, elevator.currentFloor).catch
-    } else if (elevator.destinations[0] && elevator.destinations[0] < elevator.currentFloor) {
+    }
+    if (
+      elevator.destinations[0] === 0 ||
+      (elevator.destinations[0] && elevator.destinations[0] < elevator.currentFloor)
+    ) {
       moveElevatorDown(elevator.currentFloor + 1, elevator.currentFloor).catch
+    }
+
+    if (elevator.destinations.indexOf(elevator.currentFloor) !== -1) {
+      arrivedDest(1, elevator.currentFloor, elevator.destinations).catch
     }
   }, [elevator])
 
