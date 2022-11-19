@@ -47,3 +47,8 @@ body {
   position: relative;
   float: right;
 }
+
+.elevator-menu {
+  display: fles;
+  flex-direction: column;
+}

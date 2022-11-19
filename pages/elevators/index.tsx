@@ -73,14 +73,10 @@ const ElevatorsPage: BlitzPage = () => {
     }
   }, [elevator])
 
-  const Spinner = () => {
-    return <>loading..</>
-  }
-
   return (
-    <Layout>
+    <div className="elevator-menu">
       <Head>
-        <title>Elevators</title>
+        <title>Elevator</title>
       </Head>
       <h1>Elevator</h1>
       <button
@@ -90,6 +86,7 @@ const ElevatorsPage: BlitzPage = () => {
       >
         Elevator up
       </button>
+      <br></br>
       <button
         onClick={async () => {
           await moveElevatorDown(elevator.currentFloor + 1, elevator.currentFloor)
@@ -97,6 +94,7 @@ const ElevatorsPage: BlitzPage = () => {
       >
         Elevator down
       </button>
+      <br></br>
       <button
         onClick={async () => {
           await resetElevatorMutation()
@@ -104,6 +102,7 @@ const ElevatorsPage: BlitzPage = () => {
       >
         reset elevator
       </button>
+      <br></br>
 
       <div>
         <Suspense fallback="Loading...">
@@ -122,10 +121,10 @@ const ElevatorsPage: BlitzPage = () => {
           </div>
         </Suspense>
       </div>
-    </Layout>
+    </div>
   )
 }
 
-ElevatorsPage.getLayout = (page) => <Layout title="Taskmaster">{page}</Layout>
+ElevatorsPage.getLayout = (page) => <Layout title="Elevator">{page}</Layout>
 
 export default ElevatorsPage
