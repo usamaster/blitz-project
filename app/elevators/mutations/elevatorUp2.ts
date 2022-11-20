@@ -12,7 +12,7 @@ export default resolver.pipe(
   async ({ currentFloor }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const elevator = await db.floor.update({
-      where: { id: currentFloor + 2 },
+      where: { id: currentFloor + 1 },
       data: { active: true },
     })
 

@@ -79,13 +79,13 @@ const ElevatorsPage: BlitzPage = () => {
 
   useEffect(() => {
     if (elevator.destinations[0] && elevator.destinations[0] > elevator.currentFloor) {
-      moveElevatorUp(elevator.currentFloor + 1, elevator.currentFloor).catch
+      moveElevatorUp(elevator.currentFloor, elevator.currentFloor).catch
     }
     if (
-      elevator.destinations[0] === 0 ||
-      (elevator.destinations[0] && elevator.destinations[0] < elevator.currentFloor)
+      elevator.destinations[0] !== undefined &&
+      elevator.destinations[0] < elevator.currentFloor
     ) {
-      moveElevatorDown(elevator.currentFloor + 1, elevator.currentFloor).catch
+      moveElevatorDown(elevator.currentFloor, elevator.currentFloor).catch
     }
 
     if (elevator.destinations.indexOf(elevator.currentFloor) !== -1) {
@@ -101,7 +101,7 @@ const ElevatorsPage: BlitzPage = () => {
       <h1>Elevator</h1>
       <button
         onClick={async () => {
-          await moveElevatorUp(elevator.currentFloor + 1, elevator.currentFloor)
+          await moveElevatorUp(elevator.currentFloor, elevator.currentFloor)
         }}
       >
         Elevator up
@@ -109,7 +109,7 @@ const ElevatorsPage: BlitzPage = () => {
       <br></br>
       <button
         onClick={async () => {
-          await moveElevatorDown(elevator.currentFloor + 1, elevator.currentFloor)
+          await moveElevatorDown(elevator.currentFloor, elevator.currentFloor)
         }}
       >
         Elevator down

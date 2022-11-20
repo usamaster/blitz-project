@@ -33,6 +33,8 @@ const Button = ({ level, elevator }) => {
     <div>
       {elevator.destinations.indexOf(level) !== -1 ? (
         <div className="button active">{level}</div>
+      ) : elevator.currentFloor === level ? (
+        <div className="button">{level}</div>
       ) : (
         <div
           className="button"

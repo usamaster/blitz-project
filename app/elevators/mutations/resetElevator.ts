@@ -16,7 +16,7 @@ export default resolver.pipe(
       },
     })
     await db.floor.update({
-      where: { id: 1 },
+      where: { id: 0 },
       data: {
         active: true,
       },
@@ -28,6 +28,12 @@ export default resolver.pipe(
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
 
     const floor = await db.floor.update({
+      where: { id: 1 },
+      data: {
+        active: false,
+      },
+    })
+    await db.floor.update({
       where: { id: 2 },
       data: {
         active: false,
@@ -47,12 +53,6 @@ export default resolver.pipe(
     })
     await db.floor.update({
       where: { id: 5 },
-      data: {
-        active: false,
-      },
-    })
-    await db.floor.update({
-      where: { id: 6 },
       data: {
         active: false,
       },

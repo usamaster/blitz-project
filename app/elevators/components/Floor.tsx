@@ -1,31 +1,39 @@
+import { useQuery, useMutation, invalidateQuery } from "@blitzjs/rpc"
+import addUpCall from "../mutations/addUpCall"
+import getElevator from "../queries/getElevator"
 import ButtonPanel from "./ButtonPanel"
 import { ChevronDown, ChevronUp } from "./icons"
 
 interface floor {
   level: number
   active: boolean
-  elevator: Object
+  elevator: {
+    upCalls: Array<number>
+    downCalls: Array<number>
+  }
 }
 
 const Floor = ({ level, active, elevator }: floor) => {
-  const upCalls: Array<number> = [2, 1]
-  const downCalls: Array<number> = [3]
+  const [addUpCallMutation] = useMutation(addUpCall, {
+    onSuccess: async () => {
+      await invalidateQuery(getElevator)
+    },
+  })
 
-  const clickHandler = () => {
-    return (event: React.MouseEvent) => {
-      event.preventDefault()
-    }
+  const clickHandler = async (id: number, level: number) => {
+    try {
+      await addUpCallMutation({ id, level })
+    } catch (error) {}
   }
-
   const UpButton = () => {
     return (
       <>
-        {upCalls.indexOf(level) !== -1 ? (
+        {elevator.upCalls.indexOf(level) !== -1 ? (
           <div className="chevron c-active">
             <ChevronUp />
           </div>
         ) : (
-          <div className="chevron" onClick={clickHandler}>
+          <div className="chevron" onClick={() => clickHandler(1, level)}>
             <ChevronUp />
           </div>
         )}
@@ -35,12 +43,12 @@ const Floor = ({ level, active, elevator }: floor) => {
   const DownButton = () => {
     return (
       <>
-        {downCalls.indexOf(level) !== -1 ? (
+        {elevator.downCalls.indexOf(level) !== -1 ? (
           <div className="chevron c-active">
             <ChevronDown />
           </div>
         ) : (
-          <div className="chevron" onClick={clickHandler}>
+          <div className="chevron" onClick={() => clickHandler(1, level)}>
             <ChevronDown />
           </div>
         )}
